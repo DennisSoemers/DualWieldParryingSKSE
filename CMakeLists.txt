@@ -27,6 +27,7 @@ configure_file(
 
 set(sources
         src/Settings.cpp
+        src/InputEventHandler.cpp
         src/Main.cpp
 
         ${CMAKE_CURRENT_BINARY_DIR}/version.rc)

@@ -42,51 +42,11 @@ public:
 
     void Load();
 
-    struct Core {
+    struct DualWieldParrying {
         void Load(CSimpleIniA& a_ini);
 
-        bool useScoreSystem{true};
-    } core;
-
-    struct Scores {
-        void Load(CSimpleIniA& a_ini);
-
-        double scoreDiffThreshold{20.0};
-        
-        double weaponSkillWeight{1.0};
-
-        double oneHandDaggerScore{0.0};
-        double oneHandSwordScore{20.0};
-        double oneHandAxeScore{25.0};
-        double oneHandMaceScore{25.0};
-        double oneHandKatanaScore{30.0};
-        double oneHandRapierScore{15.0};
-        double oneHandClawsScore{10.0};
-        double oneHandWhipScore{-100.0};
-        double twoHandSwordScore{40.0};
-        double twoHandAxeScore{50.0};
-        double twoHandWarhammerScore{50.0};
-        double twoHandPikeScore{30.0};
-        double twoHandHalberdScore{45.0};
-        double twoHandQuarterstaffScore{50.0};
-
-        double altmerScore{-15.0};
-        double argonianScore{0.0};
-        double bosmerScore{-10.0};
-        double bretonScore{-10.0};
-        double dunmerScore{-5.0};
-        double imperialScore{0.0};
-        double khajiitScore{5.0};
-        double nordScore{10.0};
-        double orcScore{20.0};
-        double redguardScore{10.0};
-
-        double femaleScore{-10.0};
-
-        double powerAttackScore{25.0};
-
-        double playerScore{0.0};
-    } scores;
+        uint32_t parryKey{47};
+    } dualWieldParryingSettings;
 
 private:
     Settings() = default;

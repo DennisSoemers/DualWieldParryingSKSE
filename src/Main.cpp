@@ -1,6 +1,5 @@
 #include <stddef.h>
-#include "OnMeleeHit.h"
-#include "PrecisionAPI.h"
+#include "InputEventHandler.h"
 #include "Settings.h"
 
 using namespace SKSE;
@@ -41,41 +40,23 @@ namespace {
     }
 
     /**
-     * Initialize the hooks.
+     * Initialize the event handler.
      */
-    void InitializeHooks() {
-        log::trace("Initializing hooks...");
+    void InitializeEventHandler() {
+        log::trace("Initializing event sink...");
 
-        OnMeleeHit::OnMeleeHitHook::InstallHook();
-
-        log::trace("Hooks initialized.");
+        auto inputDeviceManager = RE::BSInputDeviceManager::GetSingleton();
+        if (inputDeviceManager) {
+            inputDeviceManager->AddEventSink(&DualWieldParryingSKSE::InputEventHandler::GetSingleton());
+            log::trace("Event sink initialized.");
+        } else {
+            stl::report_and_fail("Failed to initialize event sink.");
+        }
     }
 
     void MessageHandler(SKSE::MessagingInterface::Message* a_msg) {
-        switch (a_msg->type) {
-            case SKSE::MessagingInterface::kPostPostLoad: {
-                const auto precisionAPI =
-                    reinterpret_cast<PRECISION_API::IVPrecision4*>(PRECISION_API::RequestPluginAPI());
-                if (precisionAPI) {
-                    precisionAPI->AddWeaponWeaponCollisionCallback(SKSE::GetPluginHandle(), OnMeleeHit::PrecisionWeaponsCallback);
-                    logger::info("Enabled compatibility with Precision");
-                }
-            }
-                break;
-            case SKSE::MessagingInterface::kDataLoaded: {
-                auto parryingHandle = GetModuleHandleA("Parrying.dll");
-                if (parryingHandle) {
-                    logger::error("Warning! ParryingRPG has detected that Parrying.dll is also loaded!");
-                    RE::DebugMessageBox("Warning! ParryingRPG has detected that Parrying.dll is also loaded!");
-                }
-
-                auto maxsuWeaponParryHandle = GetModuleHandleA("MaxsuWeaponParry.dll");
-                if (maxsuWeaponParryHandle) {
-                    logger::error("Warning! ParryingRPG has detected that MaxsuWeaponParry.dll is also loaded!");
-                    RE::DebugMessageBox("Warning! ParryingRPG has detected that MaxsuWeaponParry.dll is also loaded!");
-                }
-            }
-                break;
+        if (a_msg->type == SKSE::MessagingInterface::kDataLoaded) {
+            InitializeEventHandler();
         }
     }
 }  // namespace
@@ -92,20 +73,12 @@ SKSEPluginLoad(const LoadInterface* skse) {
 
     Init(skse);
 
-    //const auto runtimeVersion = skse->RuntimeVersion();
-    //
-    //if (runtimeVersion < REL::Version{1, 5, 97, 0}) {
-    //    logger::error("Parrying RPG is not compatible with runtime versions below 1.5.97!");
-    //    return false;
-    //}
-
     try {
         Settings::GetSingleton()->Load();
     } catch (...) {
         logger::error("Exception caught when loading settings! Default settings will be used");
     }
 
-    InitializeHooks();
     SKSE::GetMessagingInterface()->RegisterListener(MessageHandler);
 
     log::info("{} has finished loading.", plugin->GetName());
