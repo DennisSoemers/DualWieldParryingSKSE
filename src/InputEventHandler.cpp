@@ -16,43 +16,45 @@ RE::BSEventNotifyControl InputEventHandler::ProcessEvent(RE::InputEvent* const* 
         const auto ui = RE::UI::GetSingleton();
 
         if (ui && !ui->GameIsPaused()) {
-            for (auto ev = *a_event; ev != nullptr; ev = ev->next) {
-                if (ev && ev->eventType == RE::INPUT_EVENT_TYPE::kButton) {
-                    const auto buttonEvent = static_cast<RE::ButtonEvent*>(ev);
-                    if (buttonEvent) {
-                        const auto keyCode = buttonEvent->GetIDCode();
-                        
-                        if (keyCode == Settings::GetSingleton()->dualWieldParryingSettings.parryKey) {
-                            // Event for correct key
-                            const auto controlMap = RE::ControlMap::GetSingleton();
-                            const auto playerCharacter = RE::PlayerCharacter::GetSingleton();
-                            const auto playerControls = RE::PlayerControls::GetSingleton();
+            const auto controlMap = RE::ControlMap::GetSingleton();
+            const auto playerCharacter = RE::PlayerCharacter::GetSingleton();
+            const auto playerControls = RE::PlayerControls::GetSingleton();
 
-                            if (controlMap && playerCharacter && playerControls && playerControls->attackBlockHandler) {
-                                if (controlMap->IsFightingControlsEnabled() &&
-                                    playerControls->attackBlockHandler->inputEventHandlingEnabled) {
+            if (controlMap && playerCharacter && playerControls && playerControls->attackBlockHandler) {
+                if (controlMap->IsFightingControlsEnabled() &&
+                    playerControls->attackBlockHandler->inputEventHandlingEnabled) {
+                    const auto playerState = playerCharacter->AsActorState();
 
-                                    const auto playerState = playerCharacter->AsActorState();
-                                    
-                                    if (playerState && 
-                                        playerState->GetWeaponState() == RE::WEAPON_STATE::kDrawn &&
-                                        playerState->GetSitSleepState() == RE::SIT_SLEEP_STATE::kNormal &&
-                                        playerState->GetKnockState() == RE::KNOCK_STATE_ENUM::kNormal &&
-                                        playerState->GetFlyState() == RE::FLY_STATE::kNone &&
-                                        !playerCharacter->IsInKillMove()) {
+                    if (playerState && playerState->GetWeaponState() == RE::WEAPON_STATE::kDrawn &&
+                        playerState->GetSitSleepState() == RE::SIT_SLEEP_STATE::kNormal &&
+                        playerState->GetKnockState() == RE::KNOCK_STATE_ENUM::kNormal &&
+                        playerState->GetFlyState() == RE::FLY_STATE::kNone && 
+                        !playerCharacter->IsInKillMove()) {
 
-                                        bool isBlocking = false;
-                                        if (playerCharacter->GetGraphVariableBool("IsBlocking", isBlocking)) {
-                                            // We managed to successfully read the graph variable
+                        bool isBlocking = false;
+                        if (playerCharacter->GetGraphVariableBool("IsBlocking", isBlocking)) {
+                            // We managed to successfully read the graph variable
+                            const auto parryKey = Settings::GetSingleton()->dualWieldParryingSettings.parryKey;
+
+                            for (auto ev = *a_event; ev != nullptr; ev = ev->next) {
+                                if (ev && ev->eventType == RE::INPUT_EVENT_TYPE::kButton) {
+                                    const auto buttonEvent = static_cast<RE::ButtonEvent*>(ev);
+                                    if (buttonEvent) {
+                                        const auto keyCode = buttonEvent->GetIDCode();
+
+                                        if (keyCode == parryKey) {
+                                            // Event for parry key
                                             if (buttonEvent->IsHeld()) {
                                                 // Player wants to block
-                                                if (!isBlocking) {
+                                                playerCharacter->SetGraphVariableInt("iWantBlock", 1);
+                                                if (!isBlocking) { 
                                                     playerCharacter->NotifyAnimationGraph("blockStart");
                                                 }
                                             } else if (buttonEvent->IsUp()) {
                                                 // Player wants to stop blocking
                                                 if (isBlocking) {
                                                     playerCharacter->NotifyAnimationGraph("blockStop");
+                                                    playerCharacter->SetGraphVariableInt("iWantBlock", 0);
                                                 }
                                             }
                                         }
