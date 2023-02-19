@@ -57,7 +57,43 @@ RE::BSEventNotifyControl InputEventHandler::ProcessEvent(RE::InputEvent* const* 
                                                     playerCharacter->SetGraphVariableInt("iWantBlock", 0);
                                                 }
                                             }
-                                        }
+                                        } /* else if (keyCode ==
+                                                   controlMap->GetMappedKey(RE::UserEvents::GetSingleton()->rightAttack,
+                                                                            buttonEvent->GetDevice())) {
+                                            
+                                            if (buttonEvent->IsHeld()) {
+                                                logger::info("Attack key held!");
+
+                                                int32_t iWantBlock = -1;
+                                                playerCharacter->GetGraphVariableInt("iWantBlock", iWantBlock);
+                                                logger::info("iWantBlock = {}", iWantBlock);
+
+                                                bool isBashing = false;
+                                                playerCharacter->GetGraphVariableBool("IsBashing", isBashing);
+                                                logger::info("IsBashing = {}", isBashing);
+
+                                                logger::info("IsBlocking = {}", isBlocking);
+
+                                                logger::info("attack state = {}",
+                                                             static_cast<uint32_t>(playerState->GetAttackState()));
+                                            } else if (buttonEvent->IsUp()) {
+                                                playerCharacter->GetActorRuntimeData().currentProcess;
+                                                logger::info("Attack key up!");
+
+                                                int32_t iWantBlock = -1;
+                                                playerCharacter->GetGraphVariableInt("iWantBlock", iWantBlock);
+                                                logger::info("iWantBlock = {}", iWantBlock);
+
+                                                bool isBashing = false;
+                                                playerCharacter->GetGraphVariableBool("IsBashing", isBashing);
+                                                logger::info("IsBashing = {}", isBashing);
+
+                                                logger::info("IsBlocking = {}", isBlocking);
+
+                                                logger::info("attack state = {}",
+                                                             static_cast<uint32_t>(playerState->GetAttackState()));
+                                            }
+                                        } */
                                     }
                                 }
                             }
