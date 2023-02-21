@@ -40,7 +40,13 @@ RE::BSEventNotifyControl InputEventHandler::ProcessEvent(RE::InputEvent* const* 
                                 if (ev && ev->eventType == RE::INPUT_EVENT_TYPE::kButton) {
                                     const auto buttonEvent = static_cast<RE::ButtonEvent*>(ev);
                                     if (buttonEvent) {
-                                        const auto keyCode = buttonEvent->GetIDCode();
+                                        auto keyCode = buttonEvent->GetIDCode();
+
+                                        if (buttonEvent->device.get() == RE::INPUT_DEVICE::kMouse) {
+                                            keyCode += 256;
+                                        } else if (buttonEvent->device.get() == RE::INPUT_DEVICE::kGamepad) {
+                                            keyCode += 266;
+                                        }
 
                                         if (keyCode == parryKey) {
                                             // Event for parry key
