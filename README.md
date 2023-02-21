@@ -8,7 +8,7 @@ An SKSE plugin implementation of Dual Wield Parrying for The Elder Scrolls V: Sk
 
 ## Download
 
-The plugin can be downloaded from [TO DO its NexusMods page]().
+The plugin can be downloaded from [its NexusMods page](https://www.nexusmods.com/skyrimspecialedition/mods/85505/).
 
 ## Runtime Requirements (for users)
 
