@@ -1,5 +1,7 @@
 #include <stddef.h>
 #include "InputEventHandler.h"
+#include "HitDataPopulateHook.h"
+#include "OnHitEventHandler.h"
 #include "Settings.h"
 
 using namespace SKSE;
@@ -54,6 +56,30 @@ namespace {
         }
     }
 
+    /**
+     * Initialize the hooks.
+     */
+    void InitializeHooks() {
+        log::trace("Initializing hooks...");
+        Hooks::HitDataPopulateHook::InstallHooks();
+        log::trace("Hooks initialized.");
+    }
+
+    /**
+     * Initialize the event sink, which lets us respond to events
+     * sent by the game engine.
+     */
+    void InitializeEventSink() {
+        log::trace("Initializing event sink...");
+        auto scriptEventSource = RE::ScriptEventSourceHolder::GetSingleton();
+        if (scriptEventSource) {
+            scriptEventSource->AddEventSink(&OnHitEvents::OnHitEventHandler::GetSingleton());
+            log::trace("Event sink initialized.");
+        } else {
+            stl::report_and_fail("Failed to initialize event sink.");
+        }
+    }
+
     void MessageHandler(SKSE::MessagingInterface::Message* a_msg) {
         if (a_msg->type == SKSE::MessagingInterface::kDataLoaded) {
             InitializeEventHandler();
@@ -79,6 +105,8 @@ SKSEPluginLoad(const LoadInterface* skse) {
         logger::error("Exception caught when loading settings! Default settings will be used");
     }
 
+    InitializeHooks();
+    InitializeEventSink();
     SKSE::GetMessagingInterface()->RegisterListener(MessageHandler);
 
     log::info("{} has finished loading.", plugin->GetName());
