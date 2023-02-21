@@ -45,7 +45,61 @@ RE::BSEventNotifyControl InputEventHandler::ProcessEvent(RE::InputEvent* const* 
                                         if (buttonEvent->device.get() == RE::INPUT_DEVICE::kMouse) {
                                             keyCode += 256;
                                         } else if (buttonEvent->device.get() == RE::INPUT_DEVICE::kGamepad) {
-                                            keyCode += 266;
+                                            RE::BSWin32GamepadDevice::Key gamepadKey =
+                                                static_cast<RE::BSWin32GamepadDevice::Key>(keyCode);
+                                            switch (gamepadKey) {
+                                                case RE::BSWin32GamepadDevice::Key::kUp:
+                                                    keyCode = 266;
+                                                    break;
+                                                case RE::BSWin32GamepadDevice::Key::kDown:
+                                                    keyCode = 267;
+                                                    break;
+                                                case RE::BSWin32GamepadDevice::Key::kLeft:
+                                                    keyCode = 268;
+                                                    break;
+                                                case RE::BSWin32GamepadDevice::Key::kRight:
+                                                    keyCode = 269;
+                                                    break;
+                                                case RE::BSWin32GamepadDevice::Key::kStart:
+                                                    keyCode = 270;
+                                                    break;
+                                                case RE::BSWin32GamepadDevice::Key::kBack:
+                                                    keyCode = 271;
+                                                    break;
+                                                case RE::BSWin32GamepadDevice::Key::kLeftThumb:
+                                                    keyCode = 272;
+                                                    break;
+                                                case RE::BSWin32GamepadDevice::Key::kRightThumb:
+                                                    keyCode = 273;
+                                                    break;
+                                                case RE::BSWin32GamepadDevice::Key::kLeftShoulder:
+                                                    keyCode = 274;
+                                                    break;
+                                                case RE::BSWin32GamepadDevice::Key::kRightShoulder:
+                                                    keyCode = 275;
+                                                    break;
+                                                case RE::BSWin32GamepadDevice::Key::kA:
+                                                    keyCode = 276;
+                                                    break;
+                                                case RE::BSWin32GamepadDevice::Key::kB:
+                                                    keyCode = 277;
+                                                    break;
+                                                case RE::BSWin32GamepadDevice::Key::kX:
+                                                    keyCode = 278;
+                                                    break;
+                                                case RE::BSWin32GamepadDevice::Key::kY:
+                                                    keyCode = 279;
+                                                    break;
+                                                case RE::BSWin32GamepadDevice::Key::kLeftTrigger:
+                                                    keyCode = 280;
+                                                    break;
+                                                case RE::BSWin32GamepadDevice::Key::kRightTrigger:
+                                                    keyCode = 281;
+                                                    break;
+                                                default:
+                                                    keyCode = static_cast<uint32_t>(-1);
+                                                    break;
+                                            }
                                         }
 
                                         if (keyCode == parryKey) {
