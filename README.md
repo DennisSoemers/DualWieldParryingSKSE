@@ -34,6 +34,7 @@ and I refer to that repository for highly detailed instructions on installation 
 ## Credits
 
 Thanks to:
+- [ersh1](https://github.com/ersh1/) for some addresses I took from [Precision](https://github.com/ersh1/Precision).
 - [powerof3](https://github.com/powerof3/) for code I used as example for reading/writing .ini files.
 - CharmedBaryon for [CommonLibSSE NG](https://github.com/CharmedBaryon/CommonLibSSE-NG) and the [CommonLibSSE NG Sample Plugin](https://gitlab.com/colorglass/commonlibsse-sample-plugin).
 - The SKSE authors for [SKSE](http://skse.silverlock.org/).
