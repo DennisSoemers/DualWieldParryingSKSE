@@ -116,17 +116,18 @@ RE::BSEventNotifyControl InputEventHandler::ProcessEvent(RE::InputEvent* const* 
                                                 // Event for parry key
                                                 if (buttonEvent->IsHeld()) {
                                                     // Player wants to block
-                                                    playerCharacter->SetGraphVariableInt("iWantBlock", 1);
+                                                    //playerCharacter->SetGraphVariableInt("iWantBlock", 1);
                                                     playerState->actorState2.wantBlocking = 1;
                                                     if (!isBlocking) {
                                                         playerCharacter->NotifyAnimationGraph("blockStart");
                                                     }
                                                 } else if (buttonEvent->IsUp()) {
                                                     // Player wants to stop blocking
+                                                    playerState->actorState2.wantBlocking = 0;
                                                     if (isBlocking) {
                                                         playerCharacter->NotifyAnimationGraph("blockStop");
-                                                        playerCharacter->SetGraphVariableInt("iWantBlock", 0);
-                                                        playerState->actorState2.wantBlocking = 0;
+                                                    //    playerCharacter->SetGraphVariableInt("iWantBlock", 0);
+                                                    //    playerState->actorState2.wantBlocking = 0;
                                                     }
                                                 }
                                             }
