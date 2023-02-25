@@ -6,7 +6,7 @@ message("Using toolchain file ${CMAKE_TOOLCHAIN_FILE}.")
 ########################################################################################################################
 project(
         DualWieldParryingSKSE
-        VERSION 1.2.0
+        VERSION 1.3.0
         DESCRIPTION "An SKSE plugin implementation of Dual Wield Parrying for Skyrim."
         LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
@@ -28,8 +28,6 @@ configure_file(
 set(sources
         src/Settings.cpp
         src/InputEventHandler.cpp
-        src/HitDataPopulateHook.cpp
-        src/OnHitEventHandler.cpp
         src/Main.cpp
 
         ${CMAKE_CURRENT_BINARY_DIR}/version.rc)
