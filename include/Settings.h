@@ -46,6 +46,7 @@ public:
         void Load(CSimpleIniA& a_ini);
 
         uint32_t parryKey{47};
+        uint32_t parryKey2{1'000'000};
     } dualWieldParryingSettings;
 
 private:

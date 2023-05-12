@@ -45,6 +45,7 @@ RE::BSEventNotifyControl InputEventHandler::ProcessEvent(RE::InputEvent* const* 
                             if (playerCharacter->GetGraphVariableBool("IsBlocking", isBlocking)) {
                                 // We managed to successfully read the graph variable
                                 const auto parryKey = Settings::GetSingleton()->dualWieldParryingSettings.parryKey;
+                                const auto parryKey2 = Settings::GetSingleton()->dualWieldParryingSettings.parryKey2;
 
                                 for (auto ev = *a_event; ev != nullptr; ev = ev->next) {
                                     if (ev && ev->eventType == RE::INPUT_EVENT_TYPE::kButton) {
@@ -112,7 +113,7 @@ RE::BSEventNotifyControl InputEventHandler::ProcessEvent(RE::InputEvent* const* 
                                                 }
                                             }
 
-                                            if (keyCode == parryKey) {
+                                            if (keyCode == parryKey || keyCode == parryKey2) {
                                                 // Event for parry key
                                                 if (buttonEvent->IsHeld()) {
                                                     // Player wants to block

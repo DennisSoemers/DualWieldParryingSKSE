@@ -23,4 +23,7 @@ void Settings::DualWieldParrying::Load(CSimpleIniA& a_ini) {
 
     detail::get_value(a_ini, parryKey, section, "ParryKey",
                       ";Code of key to use for parrying. See https://www.creationkit.com/index.php?title=Input_Script#DXScanCodes");
+    detail::get_value(
+        a_ini, parryKey2, section, "ParryKey2",
+        ";Optional second keybinding. Use a big number like 1000000 if you don't want a second keybinding.");
 }
