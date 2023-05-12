@@ -15,7 +15,8 @@ RE::BSEventNotifyControl InputEventHandler::ProcessEvent(RE::InputEvent* const* 
     if (a_event) {
         const auto ui = RE::UI::GetSingleton();
 
-        if (ui && !ui->GameIsPaused()) {
+        if (ui && !ui->GameIsPaused() && !ui->IsApplicationMenuOpen() && !ui->IsItemMenuOpen() && 
+            !ui->IsMenuOpen(RE::InterfaceStrings::GetSingleton()->dialogueMenu)) {
             const auto controlMap = RE::ControlMap::GetSingleton();
             const auto playerCharacter = RE::PlayerCharacter::GetSingleton();
             const auto playerControls = RE::PlayerControls::GetSingleton();
