@@ -117,7 +117,6 @@ RE::BSEventNotifyControl InputEventHandler::ProcessEvent(RE::InputEvent* const* 
 
 
                                             if (keyCode == parryKey || keyCode == parryKey2) {
-                                                const auto userEvents = RE::UserEvents::GetSingleton();
                                                 const auto controlMap = RE::ControlMap::GetSingleton();
                                                 const auto eventName = controlMap->GetUserEventName(buttonEvent->GetIDCode(), buttonEvent->device.get());
 
