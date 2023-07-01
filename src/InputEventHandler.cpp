@@ -114,17 +114,16 @@ RE::BSEventNotifyControl InputEventHandler::ProcessEvent(RE::InputEvent* const* 
                                                 }
                                             }
 
-
-
                                             if (keyCode == parryKey || keyCode == parryKey2) {
-                                                const auto controlMap = RE::ControlMap::GetSingleton();
-                                                const auto eventName = controlMap->GetUserEventName(buttonEvent->GetIDCode(), buttonEvent->device.get());
+                                                const auto eventName = 
+                                                    controlMap->GetUserEventName(buttonEvent->GetIDCode(), buttonEvent->device.get());
 
                                                 if (eventName == RE::UserEvents::GetSingleton()->leftAttack) {
                                                     if (leftHandSpell || (playerLeftWeap && playerLeftWeap->GetWeaponType() == RE::WEAPON_TYPE::kStaff)) {
                                                         return RE::BSEventNotifyControl::kContinue;
                                                     }
                                                 }
+
                                                 // Event for parry key
                                                 if (buttonEvent->IsHeld()) {
                                                     // Player wants to block
