@@ -23,6 +23,8 @@ namespace DualWieldParryingSKSE {
 
         InputEventHandler& operator=(const InputEventHandler&) = delete;
         InputEventHandler& operator=(InputEventHandler&&) = delete;
+
+        bool IsModifierKeyPressed(uint32_t modifierKey) const;
     };
 
 #pragma warning(pop)

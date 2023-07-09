@@ -45,8 +45,10 @@ RE::BSEventNotifyControl InputEventHandler::ProcessEvent(RE::InputEvent* const* 
                             bool isBlocking = false;
                             if (playerCharacter->GetGraphVariableBool("IsBlocking", isBlocking)) {
                                 // We managed to successfully read the graph variable
-                                const auto parryKey = Settings::GetSingleton()->dualWieldParryingSettings.parryKey;
-                                const auto parryKey2 = Settings::GetSingleton()->dualWieldParryingSettings.parryKey2;
+                                const auto settings = Settings::GetSingleton();
+                                const auto parryKey = settings->dualWieldParryingSettings.parryKey;
+                                const auto parryKey2 = settings->dualWieldParryingSettings.parryKey2;
+                                const auto modifierKey = settings->dualWieldParryingSettings.modifier;
 
                                 for (auto ev = *a_event; ev != nullptr; ev = ev->next) {
                                     if (ev && ev->eventType == RE::INPUT_EVENT_TYPE::kButton) {
@@ -135,7 +137,7 @@ RE::BSEventNotifyControl InputEventHandler::ProcessEvent(RE::InputEvent* const* 
                                                 }
 
                                                 // Event for parry key
-                                                if (buttonEvent->IsHeld()) {
+                                                if (buttonEvent->IsHeld() && IsModifierKeyPressed(modifierKey)) {
                                                     // Player wants to block
                                                     playerState->actorState2.wantBlocking = 1;
                                                     if (!isBlocking) {
@@ -162,4 +164,24 @@ RE::BSEventNotifyControl InputEventHandler::ProcessEvent(RE::InputEvent* const* 
 
     // Let the game continue handling this event
     return RE::BSEventNotifyControl::kContinue;
+}
+
+bool InputEventHandler::IsModifierKeyPressed(uint32_t modifierKey) const {
+    if (modifierKey >= 300) {
+        return true;
+    }
+
+    if (modifierKey < 255) {
+        // Keyboard
+        auto keyboard = RE::BSInputDeviceManager::GetSingleton()->GetKeyboard();
+        return (!keyboard || keyboard->IsPressed(modifierKey));
+    } else if (modifierKey < 266) {
+        // Mouse
+        auto mouse = RE::BSInputDeviceManager::GetSingleton()->GetMouse();
+        return (!mouse || mouse->IsPressed(modifierKey));
+    } else {
+        // Gamepad
+        auto gamepad = RE::BSInputDeviceManager::GetSingleton()->GetGamepad();
+        return (!gamepad || gamepad->IsPressed(modifierKey));
+    }
 }

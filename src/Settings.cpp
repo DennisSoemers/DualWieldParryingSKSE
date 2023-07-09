@@ -26,4 +26,9 @@ void Settings::DualWieldParrying::Load(CSimpleIniA& a_ini) {
     detail::get_value(
         a_ini, parryKey2, section, "ParryKey2",
         ";Optional second keybinding. Use a big number like 1000000 if you don't want a second keybinding.");
+
+    detail::get_value(
+        a_ini, modifier, section, "Modifier",
+                      ";Optional modifier, which must be held in addition to pressing the Parry key. Use a big number "
+                      "(anything greater than or equal to 300) if you don't want a modifier key.");
 }

@@ -47,6 +47,7 @@ public:
 
         uint32_t parryKey{47};
         uint32_t parryKey2{1'000'000};
+        uint32_t modifier{1'000'000};
     } dualWieldParryingSettings;
 
 private:
