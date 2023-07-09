@@ -119,7 +119,17 @@ RE::BSEventNotifyControl InputEventHandler::ProcessEvent(RE::InputEvent* const* 
                                                     controlMap->GetUserEventName(buttonEvent->GetIDCode(), buttonEvent->device.get());
 
                                                 if (eventName == RE::UserEvents::GetSingleton()->leftAttack) {
-                                                    if (leftHandSpell || (playerLeftWeap && playerLeftWeap->GetWeaponType() == RE::WEAPON_TYPE::kStaff)) {
+                                                    // Special case for when the Dual Wield Parrying block key is exactly
+                                                    // the same as the left-attack key for the game engine.
+                                                    if (leftHandSpell &&
+                                                        leftHandSpell->GetSpellType() !=
+                                                            RE::MagicSystem::SpellType::kPoison &&
+                                                        leftHandSpell->GetSpellType() !=
+                                                            RE::MagicSystem::SpellType::kEnchantment) {
+                                                        // Have spell in left hand, so just allow casting instead of blocking
+                                                        return RE::BSEventNotifyControl::kContinue;
+                                                    } else if (playerLeftWeap && playerLeftWeap->GetWeaponType() == RE::WEAPON_TYPE::kStaff) {
+                                                        // Also allow casting spells in left hand
                                                         return RE::BSEventNotifyControl::kContinue;
                                                     }
                                                 }
@@ -127,7 +137,6 @@ RE::BSEventNotifyControl InputEventHandler::ProcessEvent(RE::InputEvent* const* 
                                                 // Event for parry key
                                                 if (buttonEvent->IsHeld()) {
                                                     // Player wants to block
-                                                    //playerCharacter->SetGraphVariableInt("iWantBlock", 1);
                                                     playerState->actorState2.wantBlocking = 1;
                                                     if (!isBlocking) {
                                                         playerCharacter->NotifyAnimationGraph("blockStart");
@@ -137,8 +146,6 @@ RE::BSEventNotifyControl InputEventHandler::ProcessEvent(RE::InputEvent* const* 
                                                     playerState->actorState2.wantBlocking = 0;
                                                     if (isBlocking) {
                                                         playerCharacter->NotifyAnimationGraph("blockStop");
-                                                    //    playerCharacter->SetGraphVariableInt("iWantBlock", 0);
-                                                    //    playerState->actorState2.wantBlocking = 0;
                                                     }
                                                 }
                                             }
