@@ -182,6 +182,6 @@ bool InputEventHandler::IsModifierKeyPressed(uint32_t modifierKey) const {
     } else {
         // Gamepad
         auto gamepad = RE::BSInputDeviceManager::GetSingleton()->GetGamepad();
-        return (!gamepad || gamepad->IsPressed(modifierKey));
+        return (!gamepad || gamepad->IsPressed(modifierKey - 265));
     }
 }
