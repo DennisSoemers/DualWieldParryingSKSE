@@ -14,9 +14,10 @@ RE::BSEventNotifyControl InputEventHandler::ProcessEvent(RE::InputEvent* const* 
 
     if (a_event) {
         const auto ui = RE::UI::GetSingleton();
+        const auto settings = Settings::GetSingleton();
 
         if (ui && !ui->GameIsPaused() && !ui->IsApplicationMenuOpen() && !ui->IsItemMenuOpen() && 
-            !ui->IsMenuOpen(RE::InterfaceStrings::GetSingleton()->dialogueMenu)) {
+            (!ui->IsMenuOpen(RE::InterfaceStrings::GetSingleton()->dialogueMenu) || settings->dualWieldParryingSettings.allowBlockingDuringDialogue)) {
             const auto controlMap = RE::ControlMap::GetSingleton();
             const auto playerCharacter = RE::PlayerCharacter::GetSingleton();
             const auto playerControls = RE::PlayerControls::GetSingleton();
@@ -45,10 +46,10 @@ RE::BSEventNotifyControl InputEventHandler::ProcessEvent(RE::InputEvent* const* 
                             bool isBlocking = false;
                             if (playerCharacter->GetGraphVariableBool("IsBlocking", isBlocking)) {
                                 // We managed to successfully read the graph variable
-                                const auto settings = Settings::GetSingleton();
                                 const auto parryKey = settings->dualWieldParryingSettings.parryKey;
                                 const auto parryKey2 = settings->dualWieldParryingSettings.parryKey2;
                                 const auto modifierKey = settings->dualWieldParryingSettings.modifier;
+                                const auto modifierKey2 = settings->dualWieldParryingSettings.modifier2;
 
                                 for (auto ev = *a_event; ev != nullptr; ev = ev->next) {
                                     if (ev && ev->eventType == RE::INPUT_EVENT_TYPE::kButton) {
@@ -116,7 +117,17 @@ RE::BSEventNotifyControl InputEventHandler::ProcessEvent(RE::InputEvent* const* 
                                                 }
                                             }
 
-                                            if (keyCode == parryKey || keyCode == parryKey2) {
+                                            bool mainKeyPressed = false;
+                                            uint32_t requiredModifierKey = 10000;
+                                            if (keyCode == parryKey) {
+                                                mainKeyPressed = true;
+                                                requiredModifierKey = modifierKey;
+                                            } else if (keyCode == parryKey2) {
+                                                mainKeyPressed = true;
+                                                requiredModifierKey = modifierKey2;
+                                            }
+
+                                            if (mainKeyPressed) {
                                                 const auto eventName = 
                                                     controlMap->GetUserEventName(buttonEvent->GetIDCode(), buttonEvent->device.get());
 
@@ -137,7 +148,8 @@ RE::BSEventNotifyControl InputEventHandler::ProcessEvent(RE::InputEvent* const* 
                                                 }
 
                                                 // Event for parry key
-                                                if (buttonEvent->IsHeld() && IsModifierKeyPressed(modifierKey)) {
+                                                if (buttonEvent->IsHeld() &&
+                                                    IsModifierKeyPressed(requiredModifierKey)) {
                                                     // Player wants to block
                                                     playerState->actorState2.wantBlocking = 1;
                                                     if (!isBlocking) {

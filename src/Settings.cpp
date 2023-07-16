@@ -31,4 +31,10 @@ void Settings::DualWieldParrying::Load(CSimpleIniA& a_ini) {
         a_ini, modifier, section, "Modifier",
                       ";Optional modifier, which must be held in addition to pressing the Parry key. Use a big number "
                       "(anything greater than or equal to 300) if you don't want a modifier key.");
+    detail::get_value(a_ini, modifier2, section, "Modifier2",
+                      ";Optional modifier, which must be held in addition to pressing the second Parry key. Use a big number "
+                      "(anything greater than or equal to 300) if you don't want a modifier key.");
+
+    detail::get_value(a_ini, allowBlockingDuringDialogue, section, "AllowBlockingDuringDialogue",
+                      ";Allow blocking during dialogue? Primarily for users of the Dialogue Movement Enabler mod.");
 }
